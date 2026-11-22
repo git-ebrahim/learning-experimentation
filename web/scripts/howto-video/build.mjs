@@ -18,17 +18,26 @@ import { chromium } from 'playwright-core'
 const here = dirname(fileURLToPath(import.meta.url))
 const outDir = join(here, '../../src/assets/howto')
 const name = 'terminal-to-claude-code'
-const voice = 'Samantha'
+// A downloadable voice: System Settings → Accessibility → Spoken Content →
+// System voice → Manage Voices… → English (United States) → Ava (Premium).
+const voice = 'Ava (Premium)'
 const fps = 30
 const sampleRate = 22050
-const lead = 0.3 // seconds of quiet before each line
-const tail = 0.7 // seconds of quiet after each line
+const lead = 0.2 // seconds of quiet before each line
+const tail = 0.45 // seconds of quiet after each line
 
 const work = mkdtempSync(join(tmpdir(), 'howto-video-'))
 const framesDir = join(work, 'frames')
 mkdirSync(framesDir)
 mkdirSync(outDir, { recursive: true })
 const run = (command, args) => execFileSync(command, args, { stdio: ['ignore', 'pipe', 'inherit'] })
+
+// `say` quietly falls back to the default voice if the one asked for isn't
+// installed, so check first rather than build with the wrong voice.
+const installed = run('say', ['-v', '?']).toString().split('\n').map((line) => line.split(/\s{2,}/)[0])
+if (!installed.includes(voice)) {
+  throw new Error(`The voice "${voice}" isn't installed. Download it in System Settings → Accessibility → Spoken Content → Manage Voices.`)
+}
 
 // 1. Speak each line as 16-bit mono PCM, so the samples are easy to place.
 const cues = JSON.parse(readFileSync(join(here, 'narration.json'), 'utf8'))
@@ -45,7 +54,7 @@ const voices = cues.map((cue) => {
 let clock = 0
 const timeline = {}
 for (const { cue, seconds } of voices) {
-  const extra = cue.id === 'outro' ? 2 : 0
+  const extra = cue.id === 'outro' ? 1 : 0
   timeline[cue.id] = {
     start: clock,
     duration: lead + seconds + tail + extra,

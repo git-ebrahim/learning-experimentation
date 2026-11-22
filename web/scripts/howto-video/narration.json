@@ -1,48 +1,48 @@
 [
   {
     "id": "intro",
-    "speech": "Here's how to open Terminal on a Mac, and start Claude Code in your Documents folder.",
-    "caption": "Here's how to open Terminal on a Mac and start Claude Code in your Documents folder."
+    "speech": "Here's how to start Claude Code from your Documents folder.",
+    "caption": "Here's how to start Claude Code from your Documents folder."
   },
   {
     "id": "spotlight",
-    "speech": "First, press Command and Space, to open Spotlight search.",
-    "caption": "First, press ⌘ Command + Space to open Spotlight search."
+    "speech": "Press Command Space, to open Spotlight.",
+    "caption": "Press ⌘ Command + Space to open Spotlight."
   },
   {
     "id": "search",
-    "speech": "Type Terminal, then press Return.",
-    "caption": "Type “Terminal”, then press Return."
+    "speech": "Type Terminal, and press Return.",
+    "caption": "Type “Terminal” and press Return."
   },
   {
     "id": "terminal",
-    "speech": "Terminal opens in your home folder. The word before the percent sign shows the folder you're in.",
-    "caption": "Terminal opens in your home folder (~). The word before the % shows the folder you're in."
+    "speech": "Terminal opens in your home folder.",
+    "caption": "Terminal opens in your home folder (~)."
   },
   {
     "id": "cd",
-    "speech": "Type C D, space, tilde, slash, Documents, and press Return. C D means change directory.",
-    "caption": "Type cd ~/Documents and press Return. cd means “change directory”.",
+    "speech": "Type C D tilde slash Documents, and press Return.",
+    "caption": "Type cd ~/Documents and press Return.",
     "typeAt": 0.05,
-    "enterAt": 0.68
+    "enterAt": 0.85
   },
   {
     "id": "pwd",
-    "speech": "To check where you are, type P W D, and press Return. You're in Documents.",
-    "caption": "To check where you are, type pwd and press Return. You're in Documents.",
-    "typeAt": 0.3,
-    "enterAt": 0.62
-  },
-  {
-    "id": "claude",
-    "speech": "Now type claude, and press Return. Claude Code starts, and can work with the files in this folder.",
-    "caption": "Now type claude and press Return. Claude Code starts and can work with the files in this folder.",
-    "typeAt": 0.1,
+    "speech": "P W D shows where you are: Documents.",
+    "caption": "pwd shows where you are: Documents.",
+    "typeAt": 0.0,
     "enterAt": 0.4
   },
   {
+    "id": "claude",
+    "speech": "Type claude, and press Return. Claude Code starts in this folder.",
+    "caption": "Type claude and press Return. Claude Code starts in this folder.",
+    "typeAt": 0.05,
+    "enterAt": 0.45
+  },
+  {
     "id": "outro",
-    "speech": "That's it. Command Space, Terminal, C D to Documents, then claude. You'll need Claude Code installed first.",
-    "caption": "That's it: ⌘ Space → Terminal → cd ~/Documents → claude. You'll need Claude Code installed first."
+    "speech": "That's it! You'll need Claude Code installed first.",
+    "caption": "That's it! You'll need Claude Code installed first."
   }
 ]

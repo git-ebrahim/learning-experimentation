@@ -64,7 +64,7 @@ function HowToVideo() {
     <Panel
       index={2}
       title="How-to video: open Terminal and start Claude Code"
-      description="A 51-second walkthrough for macOS, with a voice-over and captions."
+      description="A 30-second walkthrough for macOS, with a voice-over and captions."
     >
       <figure className="media-frame">
         {/* The <track> adds captions. The browser shows them over the video,
@@ -84,7 +84,7 @@ function HowToVideo() {
         <figcaption>
           <span>terminal-to-claude-code.mp4</span>
           <span>H.264 + AAC</span>
-          <span>1.8 MB</span>
+          <span>1.1 MB</span>
         </figcaption>
       </figure>
       <ol className="steps">

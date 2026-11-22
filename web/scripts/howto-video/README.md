@@ -14,7 +14,7 @@ flowchart LR
 
 ## Rebuild it
 
-From `web/`, on a Mac with Google Chrome:
+From `web/`, on a Mac with Google Chrome and the **Ava (Premium)** voice (System Settings → Accessibility → Spoken Content → System voice → Manage Voices…):
 
 ```sh
 npm run video

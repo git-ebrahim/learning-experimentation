@@ -1,4 +1,5 @@
 import { useEffect, useState, type ChangeEvent, type DragEvent } from 'react'
+import chimeUrl from '../assets/demo-chime.m4a'
 import diagramUrl from '../assets/sample-diagram.svg'
 import { UploadIcon } from '../components/icons.tsx'
 import { PageHeader, Panel } from '../components/layout.tsx'
@@ -20,7 +21,7 @@ function BundledImage() {
     <Panel
       index={1}
       title="Media that ships with the site"
-      description="Imported from web/src/assets/. Vite copies it into the build with a content hash in its name."
+      description="An image and a short audio clip bundled into the build. Vite adds a content hash to each file name."
     >
       <figure className="media-frame">
         <img
@@ -30,9 +31,18 @@ function BundledImage() {
           alt="Diagram: the browser loads the site from GitHub Pages and calls the NestJS API, which stores files."
         />
       </figure>
+      <figure className="media-frame">
+        {/* A 3.6-second chime generated for this site (23 KB, AAC in an .m4a file). */}
+        <audio src={chimeUrl} controls preload="metadata" />
+        <figcaption>
+          <span>demo-chime.m4a</span>
+          <span>M4A audio</span>
+          <span>23 KB</span>
+        </figcaption>
+      </figure>
       <p className="muted">
-        MP3 and MP4 files work the same way, but large media belongs on a media
-        host, not in Git.
+        Both files are imported from <code>web/src/assets/</code>. Small media
+        like this is fine in Git; large video belongs on a media host.
       </p>
     </Panel>
   )
@@ -64,7 +74,7 @@ function LocalFilePreview() {
     const header = new Uint8Array(await file.slice(0, 16).arrayBuffer())
     const detected = detectMediaType(header)
     if (!detected) {
-      setError(`${file.name} isn't a supported image, MP3, or MP4 file, whatever its name says.`)
+      setError(`${file.name} isn't a supported image, audio, or video file, whatever its name says.`)
       return
     }
 
@@ -112,12 +122,12 @@ function LocalFilePreview() {
         <span className="dropzone-title">
           Drop a file here or <span>browse</span>
         </span>
-        <span className="muted">PNG, JPEG, GIF, WebP, MP3, or MP4 · up to {formatSize(MAX_BYTES)}</span>
+        <span className="muted">PNG, JPEG, GIF, WebP, MP3, M4A, or MP4 · up to {formatSize(MAX_BYTES)}</span>
         <input
           id="media-input"
           type="file"
           className="visually-hidden"
-          accept="image/png,image/jpeg,image/gif,image/webp,audio/mpeg,.mp3,video/mp4,.mp4"
+          accept="image/png,image/jpeg,image/gif,image/webp,audio/mpeg,.mp3,audio/mp4,.m4a,video/mp4,.mp4"
           onChange={handleChange}
         />
       </label>

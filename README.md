@@ -9,3 +9,7 @@ The website is my development journal: https://git-ebrahim.github.io/learning-ex
 Build a small website people can use at a public URL. React provides the interface, Vite builds the frontend for GitHub Pages, and NestJS provides the API from a separate Node.js host. GitHub Pages serves static files, so the deployed React app will call the NestJS API over HTTPS. [GitHub Pages documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages)
 
 The project is in progress. The frontend is live. Follow the [first experiment](web/src/journal/entries/001-react-site-with-nestjs-api.md) for milestones and findings.
+
+## How it's built
+
+I build this site with help from AI coding tools. I review and merge every change myself.

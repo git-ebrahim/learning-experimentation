@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>How-to video scene</title>
+<!--
+  One frame of the how-to video. build.mjs calls setTimeline() once, then
+  renderAt(t) for every frame, and screenshots the page. renderAt only
+  depends on t, so the same t always draws the same picture.
+-->
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1280px; height: 720px; overflow: hidden; }
+  body {
+    font: 16px -apple-system, "SF Pro Text", "Helvetica Neue", sans-serif;
+    color: #1d1d1f;
+    background: linear-gradient(135deg, #3a6186 0%, #6b4c8a 55%, #c06c84 100%);
+    position: relative;
+  }
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+
+  /* A plain desktop: menu bar and dock. */
+  .menubar {
+    position: absolute; inset: 0 0 auto 0; height: 26px; padding: 0 16px;
+    display: flex; align-items: center; gap: 20px;
+    background: rgb(255 255 255 / 0.35); backdrop-filter: blur(20px);
+    font-size: 13px; color: #111;
+  }
+  .menubar b { font-weight: 700; }
+  .menubar .clock { margin-left: auto; }
+  .dock {
+    position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%);
+    display: flex; gap: 10px; padding: 8px 10px; border-radius: 18px;
+    background: rgb(255 255 255 / 0.3); backdrop-filter: blur(20px);
+  }
+  .dock span { width: 46px; height: 46px; border-radius: 11px; }
+
+  /* Spotlight search. */
+  .spotlight {
+    position: absolute; left: 50%; top: 150px; width: 640px; transform: translateX(-50%);
+    border-radius: 14px; overflow: hidden;
+    background: rgb(246 246 248 / 0.97); box-shadow: 0 24px 60px rgb(0 0 0 / 0.35);
+  }
+  .spotlight-input { display: flex; align-items: center; gap: 12px; padding: 14px 18px; font-size: 26px; }
+  .spotlight-input .placeholder { color: #9a9aa0; }
+  .spotlight-result {
+    display: flex; align-items: center; gap: 12px; margin: 0 8px 8px; padding: 8px 12px;
+    border-radius: 8px; background: #2f6fde; color: white; font-size: 17px;
+  }
+  .spotlight-result small { margin-left: auto; opacity: 0.85; font-size: 13px; }
+  .app-icon {
+    width: 32px; height: 32px; border-radius: 8px; background: #1e1e1e; border: 1px solid #555;
+    color: #e6e6e6; font: 700 13px ui-monospace, Menlo, monospace;
+    display: grid; place-items: center;
+  }
+
+  /* The Terminal window. */
+  .terminal {
+    position: absolute; left: 50%; top: 70px; width: 920px; height: 520px;
+    border-radius: 12px; overflow: hidden; background: #1e1e1e;
+    box-shadow: 0 30px 80px rgb(0 0 0 / 0.45); transform-origin: 50% 40%;
+  }
+  .titlebar {
+    height: 30px; display: flex; align-items: center; justify-content: center; position: relative;
+    background: #2d2d2d; color: #b8b8b8; font-size: 13px;
+  }
+  .lights { position: absolute; left: 12px; display: flex; gap: 8px; }
+  .lights span { width: 12px; height: 12px; border-radius: 50%; }
+  .term-body { padding: 14px 18px; color: #e6e6e6; font-size: 19px; line-height: 1.55; white-space: pre; }
+  .term-body .dim { color: #8a8a8a; }
+  .term-body .prompt { color: #7ee787; }
+  .term-body .dir { color: #79c0ff; }
+  .cursor { display: inline-block; width: 0.6em; height: 1.1em; vertical-align: -0.2em; background: #e6e6e6; }
+  .welcome {
+    margin: 6px 0 10px; padding: 10px 16px; width: 560px; white-space: normal;
+    border: 1.5px solid #d97757; border-radius: 8px; line-height: 1.6;
+  }
+  .welcome .star { color: #d97757; }
+  .input-box { width: 860px; padding: 6px 14px; border: 1.5px solid #6b6b6b; border-radius: 8px; white-space: normal; }
+
+  /* Overlays: which key to press, which step we're on, and the title cards. */
+  .keys {
+    position: absolute; left: 50%; bottom: 96px; transform: translateX(-50%);
+    display: flex; gap: 12px; align-items: center; color: white; font-size: 22px; font-weight: 600;
+  }
+  .keycap {
+    min-width: 64px; padding: 12px 20px; border-radius: 12px; text-align: center;
+    background: #fafafa; color: #1d1d1f; font-size: 24px; font-weight: 600;
+    box-shadow: 0 5px 0 #b9b9be, 0 10px 24px rgb(0 0 0 / 0.35);
+  }
+  .step {
+    position: absolute; left: 24px; bottom: 24px; padding: 10px 16px; border-radius: 999px;
+    background: rgb(17 17 17 / 0.8); color: white; font-size: 18px; font-weight: 600;
+  }
+  .step em { font-style: normal; color: #ffd166; margin-right: 8px; }
+  .card {
+    position: absolute; inset: 0; display: grid; place-content: center; gap: 22px; text-align: center;
+    background: rgb(16 18 27 / 0.94); color: white;
+  }
+  .card h1 { font-size: 50px; line-height: 1.15; letter-spacing: -0.02em; }
+  .card p { font-size: 22px; color: #c9c9d1; }
+  .recap { display: flex; gap: 12px; justify-content: center; align-items: center; font-size: 24px; }
+  .recap span.chip { padding: 10px 16px; border-radius: 10px; background: #2a2d3a; }
+  .recap span.arrow { color: #ffd166; }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+  <div class="menubar"><b>Finder</b><span>File</span><span>Edit</span><span>View</span><span>Go</span><span>Window</span><span>Help</span><span class="clock">Sun 22 Nov 09:41</span></div>
+  <div class="dock">
+    <span style="background:#4f8ef7"></span><span style="background:#f2b134"></span><span style="background:#52c27a"></span>
+    <span style="background:#e2574c"></span><span style="background:#1e1e1e;border:1px solid #666"></span><span style="background:#9b6bdf"></span>
+  </div>
+
+  <div id="spotlight" class="spotlight hidden">
+    <div class="spotlight-input"><span aria-hidden="true">🔍</span><span id="query"></span></div>
+    <div id="result" class="spotlight-result hidden"><span class="app-icon">&gt;_</span>Terminal<small>Application</small></div>
+  </div>
+
+  <div id="terminal" class="terminal hidden">
+    <div class="titlebar"><div class="lights"><span style="background:#ff5f57"></span><span style="background:#febc2e"></span><span style="background:#28c840"></span></div><span id="title">you — -zsh — 80×24</span></div>
+    <div id="term" class="term-body mono"></div>
+  </div>
+
+  <div id="keys" class="keys hidden"></div>
+  <div id="step" class="step hidden"></div>
+  <div id="card" class="card hidden"></div>
+
+<script>
+  let segments = {}
+
+  // Called once with { id: { start, duration, speech, typeAt?, enterAt? } }.
+  window.setTimeline = (timeline) => { segments = timeline }
+
+  const $ = (id) => document.getElementById(id)
+  const show = (id, visible) => $(id).classList.toggle('hidden', !visible)
+  const escape = (text) => text.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c])
+  const between = (t, from, to) => t >= from && t < to
+
+  // How much of `text` has been typed at time t, typing `perSecond` characters a second from `from`.
+  const typed = (text, t, from, perSecond = 9) =>
+    text.slice(0, Math.max(0, Math.min(text.length, Math.floor((t - from) * perSecond))))
+
+  const end = (id) => segments[id].start + segments[id].duration
+  const at = (id, fraction) => segments[id].start + segments[id].speechStart + segments[id].speech * fraction
+
+  const prompt = (dir) => `<span class="prompt">you@MacBook</span> <span class="dir">${dir}</span> % `
+
+  // The three commands, in order. Each one is typed, then "Return" runs it.
+  const commands = [
+    { id: 'cd', text: 'cd ~/Documents', dir: '~', output: () => '' },
+    { id: 'pwd', text: 'pwd', dir: 'Documents', output: () => '/Users/you/Documents\n' },
+    {
+      id: 'claude', text: 'claude', dir: 'Documents', output: (t) => {
+        const box = `<div class="welcome"><span class="star">✻</span> Welcome to <b>Claude Code</b>!<br><span class="dim">/help for help</span><br><span class="dim">cwd: /Users/you/Documents</span></div>`
+        const input = `<div class="input-box">&gt; ${cursor(t)}<span class="dim"> Try "explain the files in this folder"</span></div>`
+        return box + input
+      },
+    },
+  ]
+
+  const cursor = (t) => (Math.floor(t * 2) % 2 === 0 ? '<span class="cursor"></span>' : '<span class="cursor" style="opacity:0"></span>')
+
+  function terminalHtml(t) {
+    let html = `<span class="dim">Last login: Sun Nov 22 09:41:07 on console</span>\n`
+    for (const command of commands) {
+      const typeFrom = at(command.id, segments[command.id].typeAt)
+      const enterAt = at(command.id, segments[command.id].enterAt)
+      if (t < typeFrom) return html + prompt(command.dir) + cursor(t)
+      if (t < enterAt) return html + prompt(command.dir) + escape(typed(command.text, t, typeFrom)) + cursor(t)
+      html += prompt(command.dir) + escape(command.text) + '\n' + command.output(t)
+    }
+    return html
+  }
+
+  function keys(t) {
+    if (between(t, at('spotlight', 0.1), at('spotlight', 1) + 0.4)) return ['⌘ Command', '+', 'Space']
+    const returns = [at('search', 0.7)]
+    for (const command of commands) returns.push(at(command.id, segments[command.id].enterAt))
+    if (returns.some((r) => between(t, r - 0.7, r + 0.3))) return ['Return ↩']
+    return null
+  }
+
+  function step(t) {
+    if (t < segments.spotlight.start || t >= segments.outro.start) return null
+    if (t < segments.cd.start) return ['Step 1 of 3', 'Open Terminal']
+    if (t < segments.claude.start) return ['Step 2 of 3', 'Go to your Documents folder']
+    return ['Step 3 of 3', 'Start Claude Code']
+  }
+
+  window.renderAt = (t) => {
+    // Title card at the start, recap card at the end.
+    if (t < end('intro')) {
+      $('card').innerHTML = `<p>macOS · 3 steps · no experience needed</p><h1>Open Terminal and start<br>Claude Code from Documents</h1>`
+      show('card', true)
+      $('card').style.opacity = Math.min(1, (end('intro') - t) / 0.4)
+    } else if (t >= segments.outro.start) {
+      $('card').innerHTML = `<h1>That's it</h1><div class="recap mono"><span class="chip">⌘ Space</span><span class="arrow">→</span><span class="chip">Terminal</span><span class="arrow">→</span><span class="chip">cd ~/Documents</span><span class="arrow">→</span><span class="chip">claude</span></div><p>You'll need Claude Code installed first.</p>`
+      show('card', true)
+      $('card').style.opacity = Math.min(1, (t - segments.outro.start) / 0.4)
+    } else {
+      show('card', false)
+    }
+
+    // Spotlight opens with ⌘ Space, then "Terminal" is typed into it.
+    const spotlightFrom = at('spotlight', 0.75)
+    const spotlightOpen = between(t, spotlightFrom, at('search', 0.7) + 0.3)
+    show('spotlight', spotlightOpen)
+    if (spotlightOpen) {
+      const query = typed('Terminal', t, at('search', 0.05), 10)
+      $('query').innerHTML = query ? escape(query) + cursor(t) : `<span class="placeholder">Spotlight Search</span>`
+      show('result', query.length >= 3)
+    }
+
+    // Terminal opens with a short zoom.
+    const terminalFrom = at('search', 0.7) + 0.3
+    const terminalOpen = t >= terminalFrom
+    show('terminal', terminalOpen)
+    if (terminalOpen) {
+      const p = Math.min(1, (t - terminalFrom) / 0.3)
+      $('terminal').style.opacity = p
+      $('terminal').style.transform = `translateX(-50%) scale(${0.94 + 0.06 * p})`
+      $('term').innerHTML = terminalHtml(t)
+      $('title').textContent = t >= at('cd', segments.cd.enterAt) ? 'Documents — -zsh — 80×24' : 'you — -zsh — 80×24'
+    }
+
+    const keyList = keys(t)
+    show('keys', Boolean(keyList))
+    if (keyList) $('keys').innerHTML = keyList.map((k) => (k === '+' ? '<span>+</span>' : `<span class="keycap">${k}</span>`)).join('')
+
+    const stepLabel = step(t)
+    show('step', Boolean(stepLabel))
+    if (stepLabel) $('step').innerHTML = `<em>${stepLabel[0]}</em>${stepLabel[1]}`
+  }
+</script>
+</body>
+</html>

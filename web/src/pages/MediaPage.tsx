@@ -1,5 +1,8 @@
 import { useEffect, useState, type ChangeEvent, type DragEvent } from 'react'
 import chimeUrl from '../assets/demo-chime.m4a'
+import howtoPosterUrl from '../assets/howto/terminal-to-claude-code-poster.jpg'
+import howtoCaptionsUrl from '../assets/howto/terminal-to-claude-code.vtt?url'
+import howtoVideoUrl from '../assets/howto/terminal-to-claude-code.mp4'
 import diagramUrl from '../assets/sample-diagram.svg'
 import { UploadIcon } from '../components/icons.tsx'
 import { PageHeader, Panel } from '../components/layout.tsx'
@@ -43,6 +46,63 @@ function BundledImage() {
       <p className="muted">
         Both files are imported from <code>web/src/assets/</code>. Small media
         like this is fine in Git; large video belongs on a media host.
+      </p>
+    </Panel>
+  )
+}
+
+// Each step of the how-to video, also shown as text under the player.
+const howtoSteps = [
+  { keys: '⌘ Space', text: 'opens Spotlight search. Type Terminal and press Return.' },
+  { keys: 'cd ~/Documents', text: 'moves Terminal into your Documents folder. cd means "change directory".' },
+  { keys: 'pwd', text: 'prints the folder you are in, so you can check.' },
+  { keys: 'claude', text: 'starts Claude Code in that folder. It needs to be installed first.' },
+]
+
+function HowToVideo() {
+  return (
+    <Panel
+      index={2}
+      title="How-to video: open Terminal and start Claude Code"
+      description="A 51-second walkthrough for macOS, with a voice-over and captions."
+    >
+      <figure className="media-frame">
+        {/* The <track> adds captions. The browser shows them over the video,
+            and they work with the sound off and with screen readers. */}
+        <video
+          className="howto-video"
+          src={howtoVideoUrl}
+          poster={howtoPosterUrl}
+          width={1280}
+          height={720}
+          controls
+          preload="metadata"
+          playsInline
+        >
+          <track kind="captions" src={howtoCaptionsUrl} srcLang="en" label="English" default />
+        </video>
+        <figcaption>
+          <span>terminal-to-claude-code.mp4</span>
+          <span>H.264 + AAC</span>
+          <span>1.8 MB</span>
+        </figcaption>
+      </figure>
+      <ol className="steps">
+        {howtoSteps.map((step) => (
+          <li key={step.keys}>
+            <span>
+              <code>{step.keys}</code> {step.text}
+            </span>
+          </li>
+        ))}
+      </ol>
+      <p className="muted">
+        This is an animation, not a screen recording. It was made with code:
+        a web page draws each frame, macOS&apos;s built-in text-to-speech reads
+        the script, and the frames and voice are joined into an MP4. AI coding
+        tools helped write it. The script is in{' '}
+        <code>web/scripts/howto-video/</code>, so the video can be rebuilt after
+        any change.
       </p>
     </Panel>
   )
@@ -105,7 +165,7 @@ function LocalFilePreview() {
 
   return (
     <Panel
-      index={2}
+      index={3}
       title="Preview a file from your device"
       description="The file stays in your browser. Nothing is uploaded."
     >
@@ -158,7 +218,7 @@ function LocalFilePreview() {
 function RealUploads() {
   return (
     <Panel
-      index={3}
+      index={4}
       title="What a real upload needs"
       description="GitHub Pages only serves static files, so it can't receive or store uploads."
     >
@@ -200,11 +260,12 @@ export function MediaPage() {
       <PageHeader
         eyebrow="Experiment"
         title="Images, audio, and video"
-        lede="Show media that ships with the site, preview files from your own device, and see what real uploads would need."
+        lede="Show media that ships with the site, watch a short how-to video, preview files from your own device, and see what real uploads would need."
         journalSlug="media-and-uploads"
       />
       <div className="panel-stack">
         <BundledImage />
+        <HowToVideo />
         <LocalFilePreview />
         <RealUploads />
       </div>

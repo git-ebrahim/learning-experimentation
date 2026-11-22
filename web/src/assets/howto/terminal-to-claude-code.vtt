@@ -1,0 +1,33 @@
+WEBVTT
+
+1
+00:00:00.300 --> 00:00:05.009
+Here's how to open Terminal on a Mac and start Claude Code in your Documents folder.
+
+2
+00:00:06.009 --> 00:00:09.888
+First, press ⌘ Command + Space to open Spotlight search.
+
+3
+00:00:10.888 --> 00:00:13.013
+Type “Terminal”, then press Return.
+
+4
+00:00:14.013 --> 00:00:19.098
+Terminal opens in your home folder (~). The word before the % shows the folder you're in.
+
+5
+00:00:20.098 --> 00:00:27.261
+Type cd ~/Documents and press Return. cd means “change directory”.
+
+6
+00:00:28.261 --> 00:00:33.346
+To check where you are, type pwd and press Return. You're in Documents.
+
+7
+00:00:34.346 --> 00:00:40.249
+Now type claude and press Return. Claude Code starts and can work with the files in this folder.
+
+8
+00:00:41.249 --> 00:00:48.356
+That's it: ⌘ Space → Terminal → cd ~/Documents → claude. You'll need Claude Code installed first.

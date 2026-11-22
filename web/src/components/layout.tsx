@@ -3,10 +3,9 @@ import { Link, NavLink, useLocation } from 'react-router'
 import { findEntry, journalEntries } from '../journal/entries.ts'
 import { useMode, type Mode } from '../mode/mode.ts'
 import { githubHandle, profileUrl, repositoryUrl } from '../site.ts'
+import { sitePages } from '../siteMap.ts'
 import { GitHubIcon, SmileIcon, TerminalIcon } from './icons.tsx'
 import { useDocumentTitle } from './useDocumentTitle.ts'
-
-export type NavItem = { path: string; label: string }
 
 const modeOptions: { value: Mode; label: string; icon: ReactNode }[] = [
   { value: 'builder', label: 'Builder', icon: <TerminalIcon /> },
@@ -61,7 +60,7 @@ function Brand() {
   )
 }
 
-export function SiteHeader({ items }: { items: NavItem[] }) {
+export function SiteHeader() {
   return (
     <header className="site-header">
       <div className="container site-header-inner">
@@ -82,7 +81,7 @@ export function SiteHeader({ items }: { items: NavItem[] }) {
         </div>
         <nav aria-label="Main" className="site-nav">
           <ul className="nav-list">
-            {items.map((item) => (
+            {sitePages.map((item) => (
               <li key={item.path}>
                 {/* NavLink adds the "active" class when its page is showing. */}
                 <NavLink to={item.path} end={item.path === '/'} className="nav-link">

@@ -1,7 +1,9 @@
+import { JournalNote } from '../journal/JournalNote.tsx'
 export function AboutPage() {
   return (
     <section>
       <h1>About</h1>
+      <JournalNote slug="react-site-with-nestjs-api" />
       <p>
         React builds the interface, Vite bundles it, and GitHub Actions
         publishes it to GitHub Pages whenever a pull request merges into main.

@@ -1,6 +1,6 @@
 import { useEffect, type ReactNode } from 'react'
 import { Link, NavLink, useLocation } from 'react-router'
-import { findEntry, journalEntries } from '../journal/entries.ts'
+import { entryPath, findEntry, journalEntries } from '../journal/entries.ts'
 import { useMode, type Mode } from '../mode/mode.ts'
 import { githubHandle, profileUrl, repositoryUrl } from '../site.ts'
 import { sitePages } from '../siteMap.ts'
@@ -159,7 +159,7 @@ export function PageHeader({ eyebrow, title, lede, journalSlug }: PageHeaderProp
       </h1>
       {lede && <p className="lede">{lede}</p>}
       {entry && (
-        <Link to={`/journal/${entry.slug}`} className="journal-chip">
+        <Link to={entryPath(entry.slug)} className="journal-chip">
           <span className="journal-chip-number">#{entry.number}</span>
           <span className="journal-chip-text">How this was built: {entry.title}</span>
           <span aria-hidden="true">→</span>

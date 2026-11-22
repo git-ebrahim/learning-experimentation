@@ -179,3 +179,44 @@ input[type='text'] {
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
+
+.responsive-media {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.file-label {
+  display: block;
+  margin-bottom: 4px;
+}
+
+input[type='file'] {
+  font: inherit;
+  max-width: 100%;
+}
+
+.error {
+  color: #cf222e;
+}
+
+@media (prefers-color-scheme: dark) {
+  .error {
+    color: #ff7b72;
+  }
+}
+
+.media-preview {
+  margin: 16px 0 0;
+}
+
+.media-preview audio {
+  width: 100%;
+}
+
+.media-preview figcaption {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}

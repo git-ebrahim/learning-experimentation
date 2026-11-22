@@ -1,0 +1,26 @@
+# Dependabot opens PRs when dependencies or pinned GitHub Actions have updates.
+# Each PR runs the build workflow, so a broken update can't merge.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /web
+    schedule:
+      interval: weekly
+    # Wait a week before proposing a new release. Most malicious package
+    # versions are found and pulled within days. Security fixes still arrive
+    # straight away.
+    cooldown:
+      default-days: 7
+    groups:
+      npm-minor-and-patch:
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      github-actions:
+        patterns: ['*']

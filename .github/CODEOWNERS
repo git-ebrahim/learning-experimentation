@@ -1,0 +1,4 @@
+# Every file is owned by the maintainer. With the "Require owner review"
+# ruleset, pull requests from anyone else need the maintainer's approval
+# before they can merge into main.
+* @git-ebrahim

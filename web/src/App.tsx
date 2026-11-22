@@ -2,6 +2,7 @@ import type { MouseEvent } from 'react'
 import { Route, Routes } from 'react-router'
 import { ScrollToTop, SiteFooter, SiteHeader } from './components/layout.tsx'
 import { AboutPage } from './pages/AboutPage.tsx'
+import { DesignHistoryPage } from './pages/DesignHistoryPage.tsx'
 import { HomePage } from './pages/HomePage.tsx'
 import { InteractivityPage } from './pages/InteractivityPage.tsx'
 import { JournalEntryPage } from './pages/JournalEntryPage.tsx'
@@ -16,6 +17,7 @@ const pages = [
   { path: '/journal', label: 'Journal', element: <JournalPage /> },
   { path: '/interactivity', label: 'Interactivity', element: <InteractivityPage /> },
   { path: '/media', label: 'Media', element: <MediaPage /> },
+  { path: '/design', label: 'Design', element: <DesignHistoryPage /> },
   { path: '/about', label: 'About', element: <AboutPage /> },
 ]
 

@@ -1,3 +1,4 @@
+import { JournalNote } from '../journal/JournalNote.tsx'
 import { useState, type FormEvent } from 'react'
 
 // Interactivity in React follows one loop:
@@ -165,6 +166,7 @@ export function InteractivityPage() {
   return (
     <section>
       <h1>Interactivity</h1>
+      <JournalNote slug="interactivity-with-state" />
       <p>
         Each example stores a value in state and updates it in response to a
         click, keystroke, or form submit. State resets when you leave the page

@@ -1,3 +1,4 @@
+import { JournalNote } from '../journal/JournalNote.tsx'
 import { useEffect, useState, type ChangeEvent } from 'react'
 import diagramUrl from '../assets/sample-diagram.svg'
 import { detectMediaType, type DetectedMedia } from '../media/detectMediaType.ts'
@@ -152,6 +153,7 @@ export function MediaPage() {
   return (
     <section>
       <h1>Images, audio, and video</h1>
+      <JournalNote slug="media-and-uploads" />
       <BundledImage />
       <LocalFilePreview />
       <RealUploads />

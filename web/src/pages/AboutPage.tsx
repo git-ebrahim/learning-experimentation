@@ -32,6 +32,8 @@ export function AboutPage() {
           Protected main branch, pinned actions, Dependabot, CodeQL, and a
           Content Security Policy
         </dd>
+        <dt>How</dt>
+        <dd>Built with help from AI coding tools. I review and merge every change myself.</dd>
         <dt>Next</dt>
         <dd>A NestJS API on its own host, so the site can save and share data</dd>
       </dl>

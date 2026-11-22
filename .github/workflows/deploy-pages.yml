@@ -4,18 +4,16 @@ on:
   # Merging a PR into main pushes to main, which builds and deploys the site.
   push:
     branches: [main]
-  # PRs into main build the site to prove it works, but never deploy.
+  # Every PR builds the site to prove it works, including PRs in a stack that
+  # target another branch. PRs never deploy.
+  # Never switch this to pull_request_target: that runs fork code with write
+  # access and repository secrets.
   pull_request:
-    branches: [main]
   # Adds a "Run workflow" button in the Actions tab for manual redeploys.
   workflow_dispatch:
 
-# Least privilege: read the code, write to Pages, and request an OIDC token
-# that proves to Pages this deployment came from this repository.
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+# Start with no permissions. Each job asks only for what it needs.
+permissions: {}
 
 # One Pages deployment at a time. Don't cancel a deployment in progress.
 concurrency:
@@ -25,22 +23,36 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
     defaults:
       run:
         working-directory: web
     steps:
+      # Actions are pinned to a full commit SHA. A tag such as v7 can be moved
+      # to different code; a SHA can't. Dependabot updates the SHA and the
+      # version comment together.
       - name: Check out the repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Don't leave the token in .git/config for later steps to read.
+          persist-credentials: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
           cache: npm
           cache-dependency-path: web/package-lock.json
 
+      # --ignore-scripts stops packages from running install scripts, a common
+      # way malicious packages attack build machines.
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
+
+      - name: Check dependencies for known vulnerabilities
+        run: npm audit --audit-level=high
 
       - name: Lint
         run: npm run lint
@@ -50,11 +62,11 @@ jobs:
 
       - name: Configure Pages
         if: github.event_name != 'pull_request'
-        uses: actions/configure-pages@v6
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
 
       - name: Upload the built site
         if: github.event_name != 'pull_request'
-        uses: actions/upload-pages-artifact@v5
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: web/dist
 
@@ -62,10 +74,16 @@ jobs:
     needs: build
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # Only this job can publish, and the github-pages environment only accepts
+    # deployments from main.
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

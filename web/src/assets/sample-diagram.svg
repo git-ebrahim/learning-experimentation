@@ -1,19 +1,36 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="480" height="160" viewBox="0 0 480 160" role="img" aria-labelledby="t">
   <title id="t">Request flow: browser to GitHub Pages and the API</title>
-  <rect width="480" height="160" rx="12" fill="#f6f8fa"/>
-  <g font-family="system-ui, sans-serif" font-size="14" text-anchor="middle" fill="#1f2328">
-    <rect x="20" y="55" width="120" height="50" rx="8" fill="#ffffff" stroke="#0969da" stroke-width="2"/>
-    <text x="80" y="85">Browser</text>
-    <rect x="180" y="20" width="120" height="50" rx="8" fill="#ffffff" stroke="#1a7f37" stroke-width="2"/>
-    <text x="240" y="50">GitHub Pages</text>
-    <rect x="180" y="90" width="120" height="50" rx="8" fill="#ffffff" stroke="#8250df" stroke-width="2"/>
-    <text x="240" y="120">NestJS API</text>
-    <rect x="340" y="90" width="120" height="50" rx="8" fill="#ffffff" stroke="#9a6700" stroke-width="2"/>
-    <text x="400" y="120">File storage</text>
-  </g>
-  <g stroke="#59636e" stroke-width="2" fill="none">
-    <path d="M140 72 L178 50"/>
-    <path d="M140 88 L178 110"/>
-    <path d="M300 115 L338 115"/>
+  <style>
+    .bg { fill: #f2efe9; }
+    .box { fill: #ffffff; stroke-width: 1.5; }
+    .label { fill: #1a1917; font: 500 13px system-ui, sans-serif; }
+    .wire { stroke: #9b968d; stroke-width: 1.5; fill: none; }
+    .browser { stroke: #1a1917; }
+    .pages { stroke: #2c7146; }
+    .api { stroke: #b93d0d; }
+    .storage { stroke: #8a5a00; }
+    /* An SVG shown as an image still follows the visitor color scheme. */
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #0d0c0b; }
+      .box { fill: #1b1a18; }
+      .label { fill: #eeebe5; }
+      .wire { stroke: #6f6b64; }
+      .browser { stroke: #eeebe5; }
+      .pages { stroke: #6cc48d; }
+      .api { stroke: #ff8552; }
+      .storage { stroke: #e3b34f; }
+    }
+  </style>
+  <rect class="bg" width="480" height="160" rx="12"/>
+  <path class="wire" d="M140 72 L180 47 M140 88 L180 113 M300 115 L340 115"/>
+  <rect class="box browser" x="20" y="55" width="120" height="50" rx="10"/>
+  <rect class="box pages" x="180" y="22" width="120" height="50" rx="10"/>
+  <rect class="box api" x="180" y="90" width="120" height="50" rx="10"/>
+  <rect class="box storage" x="340" y="90" width="120" height="50" rx="10"/>
+  <g class="label" text-anchor="middle" dominant-baseline="middle">
+    <text x="80" y="81">Browser</text>
+    <text x="240" y="48">GitHub Pages</text>
+    <text x="240" y="116">NestJS API</text>
+    <text x="400" y="116">File storage</text>
   </g>
 </svg>

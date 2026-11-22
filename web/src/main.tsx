@@ -1,6 +1,11 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { HashRouter } from 'react-router'
+// Fonts are installed from npm and bundled with the site, so no request goes
+// to Google Fonts and the Content Security Policy can stay at 'self'.
+import '@fontsource-variable/inter'
+import '@fontsource-variable/jetbrains-mono'
+import '@fontsource-variable/newsreader/opsz.css'
 import './index.css'
 import App from './App.tsx'
 

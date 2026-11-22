@@ -1,13 +1,15 @@
-import { NavLink, Route, Routes } from 'react-router'
+import type { MouseEvent } from 'react'
+import { Route, Routes } from 'react-router'
+import { ScrollToTop, SiteFooter, SiteHeader } from './components/layout.tsx'
 import { AboutPage } from './pages/AboutPage.tsx'
 import { HomePage } from './pages/HomePage.tsx'
+import { InteractivityPage } from './pages/InteractivityPage.tsx'
 import { JournalEntryPage } from './pages/JournalEntryPage.tsx'
 import { JournalPage } from './pages/JournalPage.tsx'
-import { InteractivityPage } from './pages/InteractivityPage.tsx'
 import { MediaPage } from './pages/MediaPage.tsx'
 import { NotFoundPage } from './pages/NotFoundPage.tsx'
 
-// One list drives both the navigation buttons and the routes.
+// One list drives both the navigation and the routes.
 // To add a page: create it in src/pages/, then add one entry here.
 const pages = [
   { path: '/', label: 'Home', element: <HomePage /> },
@@ -17,26 +19,22 @@ const pages = [
   { path: '/about', label: 'About', element: <AboutPage /> },
 ]
 
+// With HashRouter, "#main" would be read as a page path, so move focus to
+// <main> directly instead of following the link.
+function skipToMain(event: MouseEvent<HTMLAnchorElement>) {
+  event.preventDefault()
+  document.getElementById('main')?.focus()
+}
+
 function App() {
   return (
-    <div className="layout">
-      <header className="site-header">
-        <span className="site-title">Learning Experimentation</span>
-        <nav aria-label="Main">
-          <ul className="nav-list">
-            {pages.map((page) => (
-              <li key={page.path}>
-                {/* NavLink adds the "active" class when its page is showing. */}
-                <NavLink to={page.path} end={page.path === '/'} className="nav-button">
-                  {page.label}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </header>
-
-      <main className="content">
+    <>
+      <a href="#main" className="skip-link" onClick={skipToMain}>
+        Skip to content
+      </a>
+      <ScrollToTop />
+      <SiteHeader items={pages} />
+      <main id="main" className="site-main" tabIndex={-1}>
         <Routes>
           {pages.map((page) => (
             <Route key={page.path} path={page.path} element={page.element} />
@@ -47,7 +45,8 @@ function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
-    </div>
+      <SiteFooter />
+    </>
   )
 }
 

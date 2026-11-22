@@ -17,6 +17,7 @@ Work through the real ways a public repo gets attacked, and add one protection f
 | Risk | Protection | Where |
 | --- | --- | --- |
 | Someone pushes straight to `main`, or rewrites or deletes it | Ruleset **Protect main**: changes need a PR and the `build` check must pass. Force pushes and deletion are blocked, with no bypass. | Settings → Rules |
+| Someone else's PR merges without me seeing it | Ruleset **Require owner review**: one approval from a code owner (me, in `.github/CODEOWNERS`). New commits dismiss the approval, and the last push must be approved by someone other than its author. Admins can bypass this rule only when merging a PR, so I can merge my own work. | Settings → Rules; `.github/CODEOWNERS` |
 | A stranger's PR changes a workflow to steal tokens or mine crypto | First-time and outside contributors' workflows wait for my approval. The token is read-only by default. The workflow uses `pull_request`, never `pull_request_target`. | Settings → Actions; `deploy-pages.yml` |
 | A workflow token is misused | `permissions: {}` at the top, so each job asks only for what it needs. Only the deploy job can write to Pages. `persist-credentials: false` keeps the token out of `.git/config`. | `deploy-pages.yml` |
 | An action's tag is moved to malicious code | Actions are pinned to full commit SHAs, and only GitHub-owned actions are allowed. | `deploy-pages.yml`; Settings → Actions |
@@ -34,6 +35,8 @@ Work through the real ways a public repo gets attacked, and add one protection f
 - **The site has no secrets to steal.** Everything in `web/` ships to every visitor's browser. API keys must never go in frontend code. They belong in the NestJS API's host settings, or GitHub Actions secrets for CI.
 - **GitHub Pages can't set HTTP headers,** so the CSP goes in a `<meta>` tag added only to production builds. The dev server needs inline scripts for hot reload. A `<meta>` tag can't set `frame-ancestors` (clickjacking protection), which is one reason to use a host with real headers later.
 - **Rulesets apply to admins too.** With no bypass list, even I can't push to `main` directly, which matches this repo's PR-only rule.
+- **GitHub never lets you approve your own PR,** so "everyone else needs my review" takes two rulesets. **Protect main** has no bypass, so PRs and the build check apply to me too. **Require owner review** lets the admin role bypass it when merging a PR. A bypass skips every rule in its ruleset, which is why the build check stays in the one with no bypass.
+- **Merging my own PRs:** tick "Merge without waiting for requirements to be met (bypass rules)" on GitHub, or run `gh pr merge <number> --squash --admin`. Auto-merge waits for the approval, so it suits other people's PRs after I approve them. Dependabot PRs count as someone else's, so they need my approval too.
 - **Turning on SHA pinning enforcement waited until this PR merged.** Turning it on earlier would have broken deploys from `main`, which still used tag pins.
 - **Account security is part of repo security:** turn on two-factor authentication (preferably a passkey or security key) and review authorised OAuth apps and SSH keys.
 

@@ -17,8 +17,9 @@ You'll get a reply within a week. Please give a reasonable amount of time to fix
 
 ## How the repository is protected
 
-- `main` only changes through pull requests that pass the build check. Force pushes and branch deletion are blocked.
+- `main` only changes through pull requests that pass the build check. Force pushes and branch deletion are blocked for everyone.
+- Pull requests from anyone other than the maintainer need the maintainer's approval (`.github/CODEOWNERS`). Approval is dismissed if new commits are pushed.
 - GitHub Actions run with read-only permissions by default. Each job asks for only what it needs, and actions are pinned to commit SHAs.
-- Workflows from first-time and outside contributors' pull requests wait for maintainer approval before they run.
+- Workflows from outside contributors' pull requests wait for maintainer approval before they run.
 - Dependabot, secret scanning with push protection, and CodeQL code scanning are on.
 - The site is static. It has no server, database, or secrets. A Content Security Policy limits it to loading its own scripts.

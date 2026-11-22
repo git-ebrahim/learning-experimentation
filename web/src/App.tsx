@@ -1,12 +1,14 @@
 import { NavLink, Route, Routes } from 'react-router'
 import { AboutPage } from './pages/AboutPage.tsx'
 import { HomePage } from './pages/HomePage.tsx'
+import { InteractivityPage } from './pages/InteractivityPage.tsx'
 import { NotFoundPage } from './pages/NotFoundPage.tsx'
 
 // One list drives both the navigation buttons and the routes.
 // To add a page: create it in src/pages/, then add one entry here.
 const pages = [
   { path: '/', label: 'Home', element: <HomePage /> },
+  { path: '/interactivity', label: 'Interactivity', element: <InteractivityPage /> },
   { path: '/about', label: 'About', element: <AboutPage /> },
 ]
 

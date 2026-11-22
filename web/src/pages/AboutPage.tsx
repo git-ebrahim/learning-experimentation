@@ -1,5 +1,5 @@
 import { PageHeader } from '../components/layout.tsx'
-import { repositoryUrl } from '../journal/entries.ts'
+import { githubHandle, profileUrl, repositoryUrl } from '../site.ts'
 
 export function AboutPage() {
   return (
@@ -12,10 +12,17 @@ export function AboutPage() {
       />
 
       <dl className="facts">
+        <dt>Who</dt>
+        <dd>
+          <a href={profileUrl} target="_blank" rel="noopener noreferrer">
+            @{githubHandle}
+          </a>{' '}
+          on GitHub, where my other projects live
+        </dd>
         <dt>Interface</dt>
         <dd>React 19 with React Router, written in TypeScript</dd>
         <dt>Build</dt>
-        <dd>Vite bundles the app and its fonts into static files</dd>
+        <dd>Vite bundles the app, its fonts, and its media into static files</dd>
         <dt>Hosting</dt>
         <dd>GitHub Pages, published by GitHub Actions on every merge to main</dd>
         <dt>Journal</dt>
@@ -30,8 +37,11 @@ export function AboutPage() {
       </dl>
 
       <div className="button-row after-facts">
-        <a href={repositoryUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
-          View the source on GitHub
+        <a href={profileUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+          See my other projects
+        </a>
+        <a href={repositoryUrl} target="_blank" rel="noopener noreferrer" className="btn">
+          This site&apos;s source
         </a>
       </div>
     </div>

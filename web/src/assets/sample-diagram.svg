@@ -1,25 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="480" height="160" viewBox="0 0 480 160" role="img" aria-labelledby="t">
   <title id="t">Request flow: browser to GitHub Pages and the API</title>
   <style>
-    .bg { fill: #f2efe9; }
-    .box { fill: #ffffff; stroke-width: 1.5; }
+    .bg { fill: none; }
+    .box { fill: #ffffff; stroke-width: 2; }
     .label { fill: #1a1917; font: 500 13px system-ui, sans-serif; }
-    .wire { stroke: #9b968d; stroke-width: 1.5; fill: none; }
+    .wire { stroke: #8a8f8b; stroke-width: 1.5; fill: none; }
     .browser { stroke: #1a1917; }
     .pages { stroke: #2c7146; }
     .api { stroke: #b93d0d; }
     .storage { stroke: #8a5a00; }
-    /* An SVG shown as an image still follows the visitor color scheme. */
-    @media (prefers-color-scheme: dark) {
-      .bg { fill: #0d0c0b; }
-      .box { fill: #1b1a18; }
-      .label { fill: #eeebe5; }
-      .wire { stroke: #6f6b64; }
-      .browser { stroke: #eeebe5; }
-      .pages { stroke: #6cc48d; }
-      .api { stroke: #ff8552; }
-      .storage { stroke: #e3b34f; }
-    }
   </style>
   <rect class="bg" width="480" height="160" rx="12"/>
   <path class="wire" d="M140 72 L180 47 M140 88 L180 113 M300 115 L340 115"/>

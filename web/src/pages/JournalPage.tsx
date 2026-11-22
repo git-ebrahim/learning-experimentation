@@ -1,6 +1,7 @@
 import { PageHeader } from '../components/layout.tsx'
 import { Timeline } from '../journal/Timeline.tsx'
-import { journalEntries, repositoryUrl } from '../journal/entries.ts'
+import { journalEntries } from '../journal/entries.ts'
+import { repositoryUrl } from '../site.ts'
 
 export function JournalPage() {
   return (

@@ -47,8 +47,9 @@ export default defineConfig({
   // so built asset URLs must start with the repository name.
   base: '/learning-experimentation/',
   build: {
-    // Vite inlines small files as data: URLs. The CSP only allows fonts from
-    // this site, so keep every font as its own file. Other assets use the default.
-    assetsInlineLimit: (filePath) => (/\.woff2?$/.test(filePath) ? false : undefined),
+    // Vite inlines small files as data: URLs. The CSP only allows fonts and
+    // media (including caption tracks) from this site, so keep fonts and .vtt
+    // captions as their own files. Other assets use the default.
+    assetsInlineLimit: (filePath) => (/\.(woff2?|vtt)$/.test(filePath) ? false : undefined),
   },
 })

@@ -1368,6 +1368,12 @@ input[type='checkbox'] {
   margin: 0 auto;
 }
 
+.media-frame .howto-video {
+  width: 100%;
+  height: auto;
+  border-radius: calc(var(--radius) / 2);
+}
+
 .media-frame audio {
   display: block;
   width: 100%;

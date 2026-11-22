@@ -1,0 +1,33 @@
+WEBVTT
+
+1
+00:00:00.200 --> 00:00:03.512
+Here's how to start Claude Code from your Documents folder.
+
+2
+00:00:04.162 --> 00:00:07.102
+Press ⌘ Command + Space to open Spotlight.
+
+3
+00:00:07.752 --> 00:00:09.785
+Type “Terminal” and press Return.
+
+4
+00:00:10.435 --> 00:00:12.622
+Terminal opens in your home folder (~).
+
+5
+00:00:13.272 --> 00:00:16.826
+Type cd ~/Documents and press Return.
+
+6
+00:00:17.476 --> 00:00:20.507
+pwd shows where you are: Documents.
+
+7
+00:00:21.157 --> 00:00:25.389
+Type claude and press Return. Claude Code starts in this folder.
+
+8
+00:00:26.039 --> 00:00:29.156
+That's it! You'll need Claude Code installed first.

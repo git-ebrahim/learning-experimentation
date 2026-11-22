@@ -1,6 +1,6 @@
 import { PageHeader } from '../components/layout.tsx'
 import { designVersions, type DesignVersion } from '../design/versions.ts'
-import { formatDate } from '../journal/entries.ts'
+import { formatDate } from '../formatDate.ts'
 import { repositoryUrl } from '../site.ts'
 
 // A strip of small thumbnails, oldest to newest, so the whole evolution

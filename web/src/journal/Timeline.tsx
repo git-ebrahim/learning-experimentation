@@ -1,5 +1,6 @@
 import { Link } from 'react-router'
-import { formatDate, statusLabels, type JournalEntry } from './entries.ts'
+import { formatDate } from '../formatDate.ts'
+import { entryPath, statusLabels, type JournalEntry } from './entries.ts'
 
 export function StatusBadge({ status }: { status: JournalEntry['status'] }) {
   return <span className={`status status-${status}`}>{statusLabels[status]}</span>
@@ -13,7 +14,7 @@ export function TimelineItem({ entry }: { entry: JournalEntry }) {
       <span className="timeline-number">{String(entry.number).padStart(3, '0')}</span>
       <div className="timeline-body">
         <h3 className="timeline-title">
-          <Link to={`/journal/${entry.slug}`}>{entry.title}</Link>
+          <Link to={entryPath(entry.slug)}>{entry.title}</Link>
         </h3>
         <p className="timeline-summary">{entry.summary}</p>
       </div>

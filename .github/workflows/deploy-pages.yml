@@ -57,6 +57,10 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      # Runs before the build, so a failing test blocks the merge.
+      - name: Test
+        run: npm test
+
       - name: Build
         run: npm run build
 

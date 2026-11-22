@@ -4,6 +4,7 @@ date: 2026-11-22
 status: done
 summary: Generate a short original chime, encode it as AAC, ship it with the site, and teach the file checker to recognise M4A.
 demo: /media
+issues: 17
 prs: 14
 ---
 

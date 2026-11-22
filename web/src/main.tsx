@@ -2,12 +2,18 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { HashRouter } from 'react-router'
 // Fonts are installed from npm and bundled with the site, so no request goes
-// to Google Fonts and the Content Security Policy can stay at 'self'.
-import '@fontsource-variable/inter'
+// to a font service and the Content Security Policy can stay at 'self'.
+// Browsers only download a font file when the current mode uses it.
+import '@fontsource-variable/caveat'
 import '@fontsource-variable/jetbrains-mono'
-import '@fontsource-variable/newsreader/opsz.css'
+import '@fontsource-variable/nunito'
 import './index.css'
 import App from './App.tsx'
+import { ModeProvider } from './mode/ModeProvider.tsx'
+import { applyMode, readSavedMode } from './mode/mode.ts'
+
+// Set the mode before the first render so the page never flashes the wrong look.
+applyMode(readSavedMode())
 
 // HashRouter keeps the page path after a "#" (for example /#/about).
 // GitHub Pages only serves real files, so a normal URL like /about would 404
@@ -15,8 +21,10 @@ import App from './App.tsx'
 // Router reads the part after "#" to choose the page.
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <HashRouter>
-      <App />
-    </HashRouter>
+    <ModeProvider>
+      <HashRouter>
+        <App />
+      </HashRouter>
+    </ModeProvider>
   </StrictMode>,
 )

@@ -3,7 +3,8 @@ import { Link, useParams } from 'react-router'
 import remarkGfm from 'remark-gfm'
 import { useDocumentTitle } from '../components/useDocumentTitle.ts'
 import { StatusBadge } from '../journal/Timeline.tsx'
-import { findEntry, formatDate, repositoryUrl } from '../journal/entries.ts'
+import { findEntry, formatDate } from '../journal/entries.ts'
+import { repositoryUrl } from '../site.ts'
 import { NotFoundPage } from './NotFoundPage.tsx'
 
 // react-markdown turns Markdown into React elements. It ignores raw HTML in
@@ -56,6 +57,17 @@ export function JournalEntryPage() {
               See it working →
             </Link>
           )}
+          {entry.issues.map((issue) => (
+            <a
+              key={`issue-${issue}`}
+              href={`${repositoryUrl}/issues/${issue}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn"
+            >
+              Issue #{issue}
+            </a>
+          ))}
           {entry.prs.map((pr) => (
             <a
               key={pr}

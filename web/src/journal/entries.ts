@@ -7,6 +7,7 @@
 //   status: done            (planned, in-progress, or done)
 //   summary: One sentence shown in the list.
 //   demo: /about            (optional: the page that shows it working)
+//   issues: 18              (optional: comma-separated issue numbers)
 //   prs: 4                  (optional: comma-separated PR numbers)
 //   ---
 //
@@ -28,11 +29,19 @@ export type JournalEntry = {
   status: EntryStatus
   summary: string
   demo?: string
+  issues: number[]
   prs: number[]
   body: string
 }
 
 const statuses: EntryStatus[] = ['planned', 'in-progress', 'done']
+
+function parseNumberList(value: string | undefined) {
+  return (value ?? '')
+    .split(',')
+    .map((item) => Number(item.trim()))
+    .filter((item) => Number.isInteger(item) && item > 0)
+}
 
 function parseEntry(path: string, raw: string): JournalEntry {
   const fileName = path.split('/').pop()!.replace(/\.md$/, '')
@@ -63,10 +72,8 @@ function parseEntry(path: string, raw: string): JournalEntry {
     status,
     summary: fields.summary ?? '',
     demo: fields.demo || undefined,
-    prs: (fields.prs ?? '')
-      .split(',')
-      .map((value: string) => Number(value.trim()))
-      .filter((value: number) => Number.isInteger(value) && value > 0),
+    issues: parseNumberList(fields.issues),
+    prs: parseNumberList(fields.prs),
     body: raw.slice(frontmatterMatch[0].length).trim(),
   }
 }
@@ -85,8 +92,6 @@ export const statusLabels: Record<EntryStatus, string> = {
   'in-progress': 'In progress',
   done: 'Done',
 }
-
-export const repositoryUrl = 'https://github.com/git-ebrahim/learning-experimentation'
 
 // Shows 2026-11-22 as "22 Nov 2026".
 export function formatDate(isoDate: string) {

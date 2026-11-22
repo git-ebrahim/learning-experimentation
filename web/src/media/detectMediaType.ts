@@ -34,8 +34,13 @@ export function detectMediaType(bytes: Uint8Array): DetectedMedia | null {
   if (ascii(bytes, 0, 3) === 'ID3' || (bytes[0] === 0xff && (bytes[1] & 0xe0) === 0xe0)) {
     return { kind: 'audio', mimeType: 'audio/mpeg', label: 'MP3 audio' }
   }
-  // MP4 (and its relatives such as M4A and MOV) has "ftyp" at byte 4.
+  // MP4-family files have "ftyp" at byte 4, followed by a four-letter brand.
+  // The brand "M4A " marks audio-only files (AAC in an MP4 container).
   if (ascii(bytes, 4, 4) === 'ftyp') {
+    const brand = ascii(bytes, 8, 4)
+    if (brand === 'M4A ' || brand === 'M4B ') {
+      return { kind: 'audio', mimeType: 'audio/mp4', label: 'M4A audio' }
+    }
     return { kind: 'video', mimeType: 'video/mp4', label: 'MP4 video' }
   }
   return null

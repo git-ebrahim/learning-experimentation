@@ -46,4 +46,9 @@ export default defineConfig({
   // GitHub Pages serves this repo at https://git-ebrahim.github.io/learning-experimentation/,
   // so built asset URLs must start with the repository name.
   base: '/learning-experimentation/',
+  build: {
+    // Vite inlines small files as data: URLs. The CSP only allows fonts from
+    // this site, so keep every font as its own file. Other assets use the default.
+    assetsInlineLimit: (filePath) => (/\.woff2?$/.test(filePath) ? false : undefined),
+  },
 })

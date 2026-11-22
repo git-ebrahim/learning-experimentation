@@ -1,5 +1,5 @@
-import { JournalNote } from '../journal/JournalNote.tsx'
 import { useState, type FormEvent } from 'react'
+import { PageHeader, Panel } from '../components/layout.tsx'
 
 // Interactivity in React follows one loop:
 //   1. Store a value in state with useState.
@@ -11,24 +11,23 @@ function Counter() {
   const [count, setCount] = useState(0)
 
   return (
-    <div className="demo">
-      <h2>1. Click events</h2>
-      <p>
-        Count: <strong>{count}</strong>
-      </p>
+    <Panel index={1} title="Click events" description="Each button calls setCount, and React redraws the number.">
+      <output className="counter-value" aria-live="polite">
+        {count}
+      </output>
       <div className="button-row">
         {/* Pass a function when the new value depends on the old one. */}
-        <button type="button" onClick={() => setCount((c) => c - 1)}>
+        <button type="button" onClick={() => setCount((c) => c - 1)} aria-label="Decrease by one">
           −1
         </button>
-        <button type="button" onClick={() => setCount((c) => c + 1)}>
+        <button type="button" className="btn-primary" onClick={() => setCount((c) => c + 1)} aria-label="Increase by one">
           +1
         </button>
-        <button type="button" onClick={() => setCount(0)} disabled={count === 0}>
+        <button type="button" className="btn-ghost" onClick={() => setCount(0)} disabled={count === 0}>
           Reset
         </button>
       </div>
-    </div>
+    </Panel>
   )
 }
 
@@ -37,20 +36,33 @@ function LiveText() {
   const trimmed = name.trim()
 
   return (
-    <div className="demo">
-      <h2>2. Typing (a controlled input)</h2>
-      <label htmlFor="name-input">Your name</label>
-      {/* The input's value comes from state, and every keystroke updates state. */}
-      <input
-        id="name-input"
-        type="text"
-        value={name}
-        maxLength={40}
-        onChange={(event) => setName(event.target.value)}
-      />
+    <Panel index={2} title="Typing" description="A controlled input: state holds the value, and every keystroke updates it.">
+      <div className="field">
+        <label htmlFor="name-input" className="field-label">
+          Your name
+        </label>
+        {/* The input's value comes from state, and every keystroke updates state. */}
+        <input
+          id="name-input"
+          type="text"
+          value={name}
+          maxLength={40}
+          placeholder="Ada"
+          autoComplete="off"
+          onChange={(event) => setName(event.target.value)}
+        />
+      </div>
       {/* React escapes text, so typing <script> shows the characters instead of running them. */}
-      <p aria-live="polite">{trimmed ? `Hello, ${trimmed}!` : 'Type to see a greeting.'}</p>
-    </div>
+      <p className="greeting" aria-live="polite">
+        {trimmed ? (
+          <>
+            Hello, <strong>{trimmed}</strong>!
+          </>
+        ) : (
+          'Type to see a greeting.'
+        )}
+      </p>
+    </Panel>
   )
 }
 
@@ -58,23 +70,24 @@ function ShowHide() {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <div className="demo">
-      <h2>3. Showing and hiding</h2>
-      <button
-        type="button"
-        aria-expanded={isOpen}
-        aria-controls="hidden-tip"
-        onClick={() => setIsOpen((open) => !open)}
-      >
-        {isOpen ? 'Hide the tip' : 'Show a tip'}
-      </button>
+    <Panel index={3} title="Showing and hiding" description="A boolean in state decides whether an element exists.">
+      <div>
+        <button
+          type="button"
+          aria-expanded={isOpen}
+          aria-controls="hidden-tip"
+          onClick={() => setIsOpen((open) => !open)}
+        >
+          {isOpen ? 'Hide the tip' : 'Show a tip'}
+        </button>
+      </div>
       {isOpen && (
-        <p id="hidden-tip">
+        <p id="hidden-tip" className="tip">
           <code>{'{condition && <Element />}'}</code> renders the element only
           while the condition is true.
         </p>
       )}
-    </div>
+    </Panel>
   )
 }
 
@@ -107,9 +120,8 @@ function TaskList() {
   const remaining = tasks.filter((task) => !task.done).length
 
   return (
-    <div className="demo">
-      <h2>4. Forms and lists</h2>
-      <form onSubmit={addTask} className="button-row">
+    <Panel index={4} title="Forms and lists" description="Add, tick, and remove items. The count is calculated from the list.">
+      <form onSubmit={addTask} className="inline-form">
         <label htmlFor="task-input" className="visually-hidden">
           New task
         </label>
@@ -119,15 +131,16 @@ function TaskList() {
           placeholder="Add a task"
           value={draft}
           maxLength={80}
+          autoComplete="off"
           onChange={(event) => setDraft(event.target.value)}
         />
-        <button type="submit" disabled={!draft.trim()}>
+        <button type="submit" className="btn-primary" disabled={!draft.trim()}>
           Add
         </button>
       </form>
 
       {tasks.length === 0 ? (
-        <p>No tasks yet.</p>
+        <p className="empty">No tasks yet. Add one above.</p>
       ) : (
         <>
           <ul className="task-list">
@@ -144,6 +157,7 @@ function TaskList() {
                 </label>
                 <button
                   type="button"
+                  className="btn-ghost btn-small"
                   aria-label={`Remove ${task.text}`}
                   onClick={() => removeTask(task.id)}
                 >
@@ -153,29 +167,30 @@ function TaskList() {
             ))}
           </ul>
           {/* A value calculated from state, not stored separately. */}
-          <p>
+          <p className="muted" aria-live="polite">
             {remaining} of {tasks.length} left to do
           </p>
         </>
       )}
-    </div>
+    </Panel>
   )
 }
 
 export function InteractivityPage() {
   return (
-    <section>
-      <h1>Interactivity</h1>
-      <JournalNote slug="interactivity-with-state" />
-      <p>
-        Each example stores a value in state and updates it in response to a
-        click, keystroke, or form submit. State resets when you leave the page
-        or refresh.
-      </p>
-      <Counter />
-      <LiveText />
-      <ShowHide />
-      <TaskList />
-    </section>
+    <div className="container container-narrow">
+      <PageHeader
+        eyebrow="Experiment"
+        title="Interactivity"
+        lede="Each example keeps a value in state and updates it when you click, type, or submit. State resets when you leave the page or refresh."
+        journalSlug="interactivity-with-state"
+      />
+      <div className="panel-stack">
+        <Counter />
+        <LiveText />
+        <ShowHide />
+        <TaskList />
+      </div>
+    </div>
   )
 }
